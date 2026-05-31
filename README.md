@@ -1,16 +1,20 @@
 # Product Deep Dive Skill
 
 ![Codex Skill](https://img.shields.io/badge/Codex-Skill-111827)
+![Claude Compatible](https://img.shields.io/badge/Claude-Compatible-6B46C1)
 ![Feishu/Lark Docs](https://img.shields.io/badge/Feishu%2FLark-Docs-00B96B)
 ![Whiteboard Ready](https://img.shields.io/badge/Editable-Whiteboards-7B61FF)
 ![Language](https://img.shields.io/badge/Language-ZH%20%2B%20EN-blue)
+![License](https://img.shields.io/github/license/VioletScar-Hui/Product-deep-dive)
 ![Status](https://img.shields.io/badge/Status-Active-success)
 
 **AI product teardown, packaged as a Feishu/Lark document workflow.**
 
-`product-deep-dive` is a Codex skill for AI product managers who want to deeply analyze AI products and deliver polished Feishu/Lark Docs with structured questions, evaluation tables, business/market/user/technical/model analysis, and editable architecture whiteboards.
+`product-deep-dive` is a Codex and Claude-compatible skill for AI product managers who want to deeply analyze AI products and deliver polished Feishu/Lark Docs with structured questions, evaluation tables, business/market/user/technical/model analysis, and editable architecture whiteboards.
 
-`product-deep-dive` 是一个面向 AI 产品经理的 Codex Skill，用于对 AI 产品进行深度拆解，并直接输出为飞书文档型长文：包含高价值问题、测试评估表、市场/商业/用户/技术/模型/基础层拆解，以及可编辑架构画板。
+`product-deep-dive` 是一个同时支持 Codex 和 Claude 的 Skill，面向 AI 产品经理，用于对 AI 产品进行深度拆解，并直接输出为飞书文档型长文：包含高价值问题、测试评估表、市场/商业/用户/技术/模型/基础层拆解，以及可编辑架构画板。
+
+Includes a `LICENSE` file in the GitHub repository. / GitHub 仓库已包含 `LICENSE` 文件。
 
 ---
 
@@ -49,13 +53,27 @@ lark-cli auth status
 
 If `lark-cli` is missing, tell the user to install and configure it before expecting Feishu document output. Then install or update the skill:
 
+For Codex:
+
 ```powershell
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
 if (Test-Path $skillPath) {
   Set-Location $skillPath
   git pull
 } else {
-  git clone https://github.com/binhuili047-tech/Product-deep-dive.git $skillPath
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+For Claude Code:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
 }
 ```
 
@@ -66,6 +84,8 @@ Test-Path "$env:USERPROFILE\.codex\skills\product-deep-dive\SKILL.md"
 Get-Content "$env:USERPROFILE\.codex\skills\product-deep-dive\SKILL.md" -TotalCount 8
 ```
 
+For Claude Code, verify the same file under `$env:USERPROFILE\.claude\skills\product-deep-dive\SKILL.md`.
+
 Optional Feishu workflow verification:
 
 ```powershell
@@ -73,7 +93,7 @@ lark-cli docs +create --api-version v2 --help
 npx -y @larksuite/whiteboard-cli@^0.2.10 -v
 ```
 
-Finally, tell the user to restart Codex so the skill index reloads.
+Finally, tell the user to restart Codex or Claude Code so the skill index reloads.
 
 ---
 
@@ -97,17 +117,31 @@ npx -y @larksuite/whiteboard-cli@^0.2.10 -v
 
 ### 2. Install the skill
 
+For Codex:
+
 ```powershell
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
 if (Test-Path $skillPath) {
   Set-Location $skillPath
   git pull
 } else {
-  git clone https://github.com/binhuili047-tech/Product-deep-dive.git $skillPath
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
 }
 ```
 
-Restart Codex after installation.
+For Claude Code:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+Restart Codex or Claude Code after installation.
 
 ### 3. Ask for a Feishu product teardown
 
@@ -125,7 +159,7 @@ Restart Codex after installation.
 
 ### 4. Expected result
 
-Codex should create or update a Feishu/Lark document containing:
+Codex or Claude Code should create or update a Feishu/Lark document containing:
 
 - A product-manager style long-form teardown.
 - A `核心结论` section before the main chapters.
@@ -311,7 +345,8 @@ Better prompt with target:
 ```text
 Product-deep-dive/
   README.md          # Bilingual project guide
-  SKILL.md           # Codex skill instructions
+  SKILL.md           # Codex / Claude-compatible skill instructions
+  LICENSE            # Repository license
   evals/
     evals.json       # Skill evaluation cases
 ```
@@ -322,12 +357,21 @@ Product-deep-dive/
 
 If you already installed the skill:
 
+For Codex:
+
 ```powershell
 Set-Location "$env:USERPROFILE\.codex\skills\product-deep-dive"
 git pull
 ```
 
-Restart Codex after updating.
+For Claude Code:
+
+```powershell
+Set-Location "$env:USERPROFILE\.claude\skills\product-deep-dive"
+git pull
+```
+
+Restart Codex or Claude Code after updating.
 
 ---
 
@@ -370,7 +414,7 @@ Check:
 
 ### 这是什么？
 
-`product-deep-dive` 是一个用于 AI 产品深度拆解的 Codex Skill。它会引导 AI 产品经理从真实体验出发，拆解产品定位、测试评估、关键路径、差异化、能力边界、市场、商业、用户、技术、模型、基础数据和最终架构图，并默认输出为飞书文档。
+`product-deep-dive` 是一个同时支持 Codex 和 Claude Code 的 AI 产品深度拆解 Skill。它会引导 AI 产品经理从真实体验出发，拆解产品定位、测试评估、关键路径、差异化、能力边界、市场、商业、用户、技术、模型、基础数据和最终架构图，并默认输出为飞书文档。
 
 它的重点不是“复述功能”，而是把一个 AI 产品拆成可讨论、可复盘、可学习、可迁移的产品分析框架。
 
@@ -418,17 +462,31 @@ npx -y @larksuite/whiteboard-cli@^0.2.10 -v
 
 ### 安装
 
+Codex:
+
 ```powershell
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
 if (Test-Path $skillPath) {
   Set-Location $skillPath
   git pull
 } else {
-  git clone https://github.com/binhuili047-tech/Product-deep-dive.git $skillPath
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
 }
 ```
 
-安装后重启 Codex。
+Claude Code:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+安装后重启 Codex 或 Claude Code。
 
 ### 输出内容
 
@@ -458,7 +516,6 @@ if (Test-Path $skillPath) {
 
 如果你要继续完善这个仓库，建议后续补充：
 
-- `LICENSE`
 - `CHANGELOG.md`
 - `CONTRIBUTING.md`
 - 示例飞书文档截图或公开 demo 链接
@@ -468,4 +525,4 @@ if (Test-Path $skillPath) {
 
 ## License
 
-No license file is included yet. Add a `LICENSE` file before encouraging broad public reuse.
+This repository includes a `LICENSE` file. See `LICENSE` for details.

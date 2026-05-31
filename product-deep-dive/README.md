@@ -1,25 +1,80 @@
 # Product Deep Dive Skill
 
 ![Codex Skill](https://img.shields.io/badge/Codex-Skill-111827)
+![Claude Compatible](https://img.shields.io/badge/Claude-Compatible-6B46C1)
 ![Feishu/Lark Docs](https://img.shields.io/badge/Feishu%2FLark-Docs-00B96B)
 ![Whiteboard Ready](https://img.shields.io/badge/Editable-Whiteboards-7B61FF)
 ![Language](https://img.shields.io/badge/Language-ZH%20%2B%20EN-blue)
+![License](https://img.shields.io/github/license/VioletScar-Hui/Product-deep-dive)
 ![Status](https://img.shields.io/badge/Status-Active-success)
 
 **AI product teardown, packaged as a Feishu/Lark document workflow.**
 
-`product-deep-dive` is a Codex skill for AI product managers who want to deeply analyze AI products and deliver polished Feishu/Lark Docs with structured questions, evaluation tables, business/market/user/technical/model analysis, and editable architecture whiteboards.
+`product-deep-dive` is a Codex and Claude-compatible skill for AI product managers who want to deeply analyze AI products and deliver polished Feishu/Lark Docs with structured questions, evaluation tables, business/market/user/technical/model analysis, and editable architecture whiteboards.
 
-`product-deep-dive` 是一个面向 AI 产品经理的 Codex Skill，用于对 AI 产品进行深度拆解，并直接输出为飞书文档型长文：包含高价值问题、测试评估表、市场/商业/用户/技术/模型/基础层拆解，以及可编辑架构画板。
+`product-deep-dive` 是一个同时支持 Codex 和 Claude 的 Skill，面向 AI 产品经理，用于对 AI 产品进行深度拆解，并直接输出为飞书文档型长文：包含高价值问题、测试评估表、市场/商业/用户/技术/模型/基础层拆解，以及可编辑架构画板。
+
+Includes a `LICENSE` file in the GitHub repository. / GitHub 仓库已包含 `LICENSE` 文件。
+
+---
+
+## Required Prerequisite: lark-cli
+
+This skill is built around Feishu/Lark document delivery. Install and configure `lark-cli` before expecting full document creation, update, or whiteboard workflows to work.
+
+Minimum checks:
+
+```powershell
+lark-cli --version
+lark-cli auth status
+lark-cli docs +create --api-version v2 --help
+```
+
+If `lark-cli auth status` shows no usable user login, authenticate as a user before running product teardown workflows. When Feishu returns a missing-scope error, follow the scope hint from `lark-cli` and authorize that exact scope.
+
+Optional whiteboard check:
+
+```powershell
+npx -y @larksuite/whiteboard-cli@^0.2.10 -v
+```
+
+Without `lark-cli`, the skill can still draft a teardown framework in chat, but it cannot reliably create or update Feishu documents.
 
 ---
 
 ## For AI Agents: Quick Install
 
-If a user asks you to install this skill, run:
+If a user asks you to install this skill, first check the Feishu delivery prerequisite:
 
 ```powershell
-git clone https://github.com/binhuili047-tech/Product-deep-dive.git "$env:USERPROFILE\.codex\skills\product-deep-dive"
+lark-cli --version
+lark-cli auth status
+```
+
+If `lark-cli` is missing, tell the user to install and configure it before expecting Feishu document output. Then install or update the skill:
+
+For Codex:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+For Claude Code:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
 ```
 
 Then verify:
@@ -29,28 +84,66 @@ Test-Path "$env:USERPROFILE\.codex\skills\product-deep-dive\SKILL.md"
 Get-Content "$env:USERPROFILE\.codex\skills\product-deep-dive\SKILL.md" -TotalCount 8
 ```
 
-Finally, tell the user to restart Codex so the skill index reloads.
+For Claude Code, verify the same file under `$env:USERPROFILE\.claude\skills\product-deep-dive\SKILL.md`.
 
-If the destination folder already exists, update it:
+Optional Feishu workflow verification:
 
 ```powershell
-Set-Location "$env:USERPROFILE\.codex\skills\product-deep-dive"
-git pull
+lark-cli docs +create --api-version v2 --help
+npx -y @larksuite/whiteboard-cli@^0.2.10 -v
 ```
+
+Finally, tell the user to restart Codex or Claude Code so the skill index reloads.
 
 ---
 
 ## Quick Start for Humans
 
-### 1. Install
+### 1. Prepare lark-cli
+
+Install and log in to `lark-cli` first. Then check:
 
 ```powershell
-git clone https://github.com/binhuili047-tech/Product-deep-dive.git "$env:USERPROFILE\.codex\skills\product-deep-dive"
+lark-cli --version
+lark-cli auth status
+lark-cli docs +create --api-version v2 --help
 ```
 
-Restart Codex after installation.
+For editable architecture whiteboards, also check:
 
-### 2. Ask for a Feishu product teardown
+```powershell
+npx -y @larksuite/whiteboard-cli@^0.2.10 -v
+```
+
+### 2. Install the skill
+
+For Codex:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+For Claude Code:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+Restart Codex or Claude Code after installation.
+
+### 3. Ask for a Feishu product teardown
 
 ```text
 现在我要拆解星野产品，帮我进行框架搭建，并输出飞书文档
@@ -64,9 +157,9 @@ Restart Codex after installation.
 直接写一篇飞书文档型产品经理拆解文章，产品是 XXX
 ```
 
-### 3. Expected result
+### 4. Expected result
 
-Codex should create or update a Feishu/Lark document containing:
+Codex or Claude Code should create or update a Feishu/Lark document containing:
 
 - A product-manager style long-form teardown.
 - A `核心结论` section before the main chapters.
@@ -187,13 +280,24 @@ The document formatting rules include:
 
 ## Feishu and Whiteboard Requirements
 
-For full document delivery, install and configure:
+For full document delivery, `lark-cli` is required. Before running a teardown, verify:
 
-- `lark-cli`
-- Feishu/Lark user authentication
-- Feishu document create/update scopes
-- Optional: Feishu whiteboard node read/write scopes
-- Optional: `@larksuite/whiteboard-cli` for SVG-to-whiteboard conversion
+```powershell
+lark-cli --version
+lark-cli auth status
+lark-cli docs +create --api-version v2 --help
+```
+
+Required:
+
+- Feishu/Lark user authentication.
+- Feishu document create/update permissions.
+- User identity when writing to personal cloud documents.
+
+Optional for editable architecture diagrams:
+
+- Feishu whiteboard node read/write scopes.
+- `@larksuite/whiteboard-cli` for SVG-to-whiteboard conversion.
 
 The preferred architecture diagram flow is:
 
@@ -241,7 +345,8 @@ Better prompt with target:
 ```text
 Product-deep-dive/
   README.md          # Bilingual project guide
-  SKILL.md           # Codex skill instructions
+  SKILL.md           # Codex / Claude-compatible skill instructions
+  LICENSE            # Repository license
   evals/
     evals.json       # Skill evaluation cases
 ```
@@ -252,12 +357,21 @@ Product-deep-dive/
 
 If you already installed the skill:
 
+For Codex:
+
 ```powershell
 Set-Location "$env:USERPROFILE\.codex\skills\product-deep-dive"
 git pull
 ```
 
-Restart Codex after updating.
+For Claude Code:
+
+```powershell
+Set-Location "$env:USERPROFILE\.claude\skills\product-deep-dive"
+git pull
+```
+
+Restart Codex or Claude Code after updating.
 
 ---
 
@@ -280,10 +394,11 @@ For example:
 
 Check:
 
-- `lark-cli` is installed.
+- `lark-cli --version` works.
+- `lark-cli docs +create --api-version v2 --help` works.
 - User authentication is complete.
 - The current identity is `user`, not `bot`, when writing to the user's cloud documents.
-- The required Feishu document scopes are granted.
+- The required Feishu document scopes are granted. If a command returns a missing-scope hint, authorize that exact scope and retry.
 
 ### Whiteboard diagrams are not editable
 
@@ -299,7 +414,7 @@ Check:
 
 ### 这是什么？
 
-`product-deep-dive` 是一个用于 AI 产品深度拆解的 Codex Skill。它会引导 AI 产品经理从真实体验出发，拆解产品定位、测试评估、关键路径、差异化、能力边界、市场、商业、用户、技术、模型、基础数据和最终架构图，并默认输出为飞书文档。
+`product-deep-dive` 是一个同时支持 Codex 和 Claude Code 的 AI 产品深度拆解 Skill。它会引导 AI 产品经理从真实体验出发，拆解产品定位、测试评估、关键路径、差异化、能力边界、市场、商业、用户、技术、模型、基础数据和最终架构图，并默认输出为飞书文档。
 
 它的重点不是“复述功能”，而是把一个 AI 产品拆成可讨论、可复盘、可学习、可迁移的产品分析框架。
 
@@ -327,13 +442,51 @@ Check:
 - 只讨论 Agent/RAG/LLM 概念。
 - 不需要飞书文档交付。
 
-### 安装
+### 前置条件：lark-cli
+
+这个 skill 的目标产物是飞书文档，因此完整使用前需要先安装并登录 `lark-cli`：
 
 ```powershell
-git clone https://github.com/binhuili047-tech/Product-deep-dive.git "$env:USERPROFILE\.codex\skills\product-deep-dive"
+lark-cli --version
+lark-cli auth status
+lark-cli docs +create --api-version v2 --help
 ```
 
-安装后重启 Codex。
+如果 `lark-cli` 没有登录用户身份，先完成用户授权；如果飞书命令返回缺少 scope，按命令提示授权对应 scope 后重试。
+
+如需生成可编辑架构画板，建议额外检查：
+
+```powershell
+npx -y @larksuite/whiteboard-cli@^0.2.10 -v
+```
+
+### 安装
+
+Codex:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+Claude Code:
+
+```powershell
+$skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (Test-Path $skillPath) {
+  Set-Location $skillPath
+  git pull
+} else {
+  git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $skillPath
+}
+```
+
+安装后重启 Codex 或 Claude Code。
 
 ### 输出内容
 
@@ -363,7 +516,6 @@ git clone https://github.com/binhuili047-tech/Product-deep-dive.git "$env:USERPR
 
 如果你要继续完善这个仓库，建议后续补充：
 
-- `LICENSE`
 - `CHANGELOG.md`
 - `CONTRIBUTING.md`
 - 示例飞书文档截图或公开 demo 链接
@@ -373,5 +525,4 @@ git clone https://github.com/binhuili047-tech/Product-deep-dive.git "$env:USERPR
 
 ## License
 
-No license file is included yet. Add a `LICENSE` file before encouraging broad public reuse.
-
+This repository includes a `LICENSE` file. See `LICENSE` for details.
