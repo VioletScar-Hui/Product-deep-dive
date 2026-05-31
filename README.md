@@ -10,7 +10,7 @@
 
 ### What Is This?
 
-`product-deep-dive` is a Codex skill for creating long-form AI product teardown documents in Feishu/Lark Docs.
+`product-deep-dive` is a skill for creating long-form AI product teardown documents in Feishu/Lark Docs.
 
 It is designed for cases where the user explicitly wants to deeply analyze an AI product and deliver the result as a Feishu document. It does not trigger for casual mentions of AI, agents, RAG, LLMs, SaaS, or product names.
 
