@@ -214,6 +214,8 @@ Use these as seed questions. Rewrite 3-8 questions per section based on the prod
 - Which market category does the product actually belong to?
 - Is this a growing market, a replacement market, or a new behavior being created?
 - What are the strongest competitors, substitutes, and adjacent platforms?
+- Which 3+ main competitors should be compared by platform/company, role, distribution, business model, and latest public information?
+- Where does the product sit in the competitive landscape, and which two axes best explain that position?
 - Which trend makes this product timely now?
 - What market assumption would break the product's opportunity?
 
@@ -328,6 +330,38 @@ Example structure:
 | 过程能力 | 决策路径 | 中间步骤是否可解释、可追踪、可恢复 | ... | ... | ... | 待实测 |
 | 综合评测 | 安全/成本/留存综合 | 全流程是否兼顾质量、风险和商业可持续性 | ... | ... | ... | 待实测 |
 ```
+
+## Market Layer Competitor Guidance
+
+In section 6 `市场层拆解`, always include a competitor comparison table for the product's main competitors.
+
+Rules:
+
+- Analyze at least 3 main competitors. Prefer direct competitors first, then close substitutes or adjacent platforms if the direct competitor set is thin.
+- Use current public information when available. Prioritize official sites, app store pages, pricing pages, release notes, help docs, public interviews, credible media, and funding/company announcements.
+- If the latest public information is incomplete or cannot be verified, write `待验证` in that cell and add it to `信息缺口清单`.
+- Keep the table product-manager oriented: concise enough to scan, specific enough to support positioning judgment.
+
+Use this table structure:
+
+```markdown
+| 平台/公司 | 主要角色 | 分发渠道 | 核心商业模式 | 最新公开信息 |
+|---|---|---|---|---|
+| [被拆解产品] | ... | ... | ... | ... |
+| 竞品 1 | ... | ... | ... | ... |
+| 竞品 2 | ... | ... | ... | ... |
+| 竞品 3 | ... | ... | ... | ... |
+```
+
+Also draw a competitive landscape diagram in section 6.
+
+Diagram rules:
+
+- Place the analyzed product and at least 3 competitors in the diagram.
+- Choose the two axes dynamically based on the product's market. Examples: `工具属性 -> 情感/内容属性`, `轻量娱乐 -> 高生产力`, `封闭生态 -> 开放生态`, `低门槛 -> 高专业度`, `通用平台 -> 垂直场景`.
+- Explain why those two axes are useful for this product category.
+- Prefer an editable Feishu whiteboard when whiteboard access exists. If using Mermaid or SVG as fallback, keep it simple and readable.
+- Do not use the final six-layer architecture diagram as a substitute for this competitive landscape diagram; section 6 needs its own competition view.
 
 ## Feishu Table Formatting
 
@@ -724,6 +758,8 @@ Before writing to Feishu, check the architecture diagrams:
 - Final diagram visually stacks layers vertically, like 1, 2, 3, 4, 5, 6 from top to bottom.
 - In every layer band, the two second-level module groups are side-by-side from left to right.
 - Six mini diagrams are present under sections 6, 7, 8, 9, 10, and 12 when doing a full teardown.
+- Section 6 includes a competitor table with at least 3 competitors and the columns `平台/公司`, `主要角色`, `分发渠道`, `核心商业模式`, `最新公开信息`.
+- Section 6 includes a competitive landscape diagram that places the analyzed product and at least 3 competitors on two product-relevant axes.
 - Mini diagrams are also editable Feishu whiteboards when whiteboard access exists.
 - The six layer sections and their mini diagrams appear in the document's normal vertical reading order, not in a horizontal grid.
 - Every architecture diagram has no arrows or connector lines.

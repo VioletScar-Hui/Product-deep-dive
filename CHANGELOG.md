@@ -4,6 +4,23 @@ All notable changes to `product-deep-dive` are documented here by version.
 
 本文件按版本记录 `product-deep-dive` 的重要变更。
 
+## v1.4 - Market Competitor Analysis
+
+### Added
+
+- Required section 6 `市场层拆解` to include a competitor comparison table covering the analyzed product and at least 3 main competitors.
+- Standardized the market-layer competitor table columns:
+  - `平台/公司`
+  - `主要角色`
+  - `分发渠道`
+  - `核心商业模式`
+  - `最新公开信息`
+- Required section 6 to include a competitive landscape diagram with product-relevant axes and the analyzed product plus at least 3 competitors.
+
+### Changed
+
+- Clarified that `最新公开信息` should use verifiable public sources when available, and unresolved cells should be marked `待验证` and added to the information gap checklist.
+
 ## v1.3 - Three-Layer Evaluation Framework
 
 ### Changed
