@@ -4,6 +4,26 @@ All notable changes to `product-deep-dive` are documented here by version.
 
 本文件按版本记录 `product-deep-dive` 的重要变更。
 
+## v1.5 - Evaluation Sub-Dimensions and Dimension Explanations
+
+### Added
+
+- Expanded section 2 `测试评估体系` so the three required main dimensions now support scenario-specific second-level indicators.
+- Added common second-level indicator families:
+  - `端到端结果层`
+  - `用户层`
+  - `模型数据层`
+  - `技术层`
+- Required every evaluation dimension to include a detailed explanation covering:
+  - `评什么`
+  - `为什么重要`
+  - `怎么评`
+- Updated the scoring table template to include `维度说明` so the evaluation logic is explicit instead of score-only.
+
+### Changed
+
+- Clarified that second-level indicators are generated under the fixed main dimensions `端到端`, `过程能力`, and `综合评测`; they should not replace the main dimensions.
+
 ## v1.4 - Market Competitor Analysis
 
 ### Added

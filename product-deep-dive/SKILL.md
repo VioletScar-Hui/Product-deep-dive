@@ -181,6 +181,8 @@ Use these as seed questions. Rewrite 3-8 questions per section based on the prod
 - Which concrete user scenario should be used as the main test case?
 - What should be evaluated as end-result quality, and what should be evaluated as process capability?
 - How should the evaluation move from black-box end-to-end output checks, to glass-box process and decision-path checks, and finally to white-box full-process multidimensional checks?
+- Which scenario-specific second-level indicators should be used under the three main dimensions, such as end-to-end result, user layer, model/data layer, and technical layer?
+- For each evaluation dimension, what exactly does it measure, why does it matter for this product, and how should it be scored?
 - Which dimensions deserve higher weight because they drive real business value?
 - What score would count as usable, recommendable, or production-grade?
 - Which failure should immediately lower the product's score?
@@ -321,14 +323,41 @@ The main dimensions of the testing scenario must always use this three-layer eva
 
 Build second-level indicators dynamically under these three main dimensions based on the concrete product and scenario. Do not replace the three main dimensions with arbitrary labels. Instead, adapt sub-dimensions and evaluation items.
 
+The second-level indicators should describe which part of the product is being evaluated. Common second-level indicator families include:
+
+| Second-level indicator family | What it covers | Typical placement |
+|---|---|---|
+| 端到端结果层 | Final answer, final asset, final task completion, delivery completeness, and user-perceived usefulness. | Usually under `端到端`; can also appear in `综合评测` when comparing final outcome with cost/risk. |
+| 用户层 | Entry point, user path, interaction friction, trust building, controllability, feedback, retention trigger, and Aha Moment. | Usually under `过程能力`; can also appear in `综合评测` when evaluating cross-session user value. |
+| 模型数据层 | Model capability fit, model routing, context use, RAG/data grounding, memory, data freshness, personalization, hallucination risk, and evaluation data. | Usually under `过程能力` or `综合评测`, depending on whether it is observed behavior or inferred system quality. |
+| 技术层 | Workflow orchestration, agent/tool calls, state management, latency, stability, error recovery, permission handling, security, and integration depth. | Usually under `过程能力` or `综合评测`, depending on whether it is step-level behavior or full-system engineering quality. |
+
+For each main dimension and each second-level indicator, include a short detailed introduction before or inside the table. The introduction must answer:
+
+- `评什么`: the concrete capability, behavior, or result being measured.
+- `为什么重要`: why this dimension matters for the product's target scenario, business value, or user trust.
+- `怎么评`: what evidence, test path, scoring logic, or observation should be used.
+
 Example structure:
 
 ```markdown
-| 主维度 | 二级指标 | 评估项 | 解释 | 评分逻辑 | 权重/满分 | 当前得分 |
+### 评估维度说明
+
+| 主维度 | 评测视角 | 维度说明 |
+|---|---|---|
+| 端到端 | 黑盒评测 | 评什么：...；为什么重要：...；怎么评：... |
+| 过程能力 | 玻璃盒评测 | 评什么：...；为什么重要：...；怎么评：... |
+| 综合评测 | 白盒评测 | 评什么：...；为什么重要：...；怎么评：... |
+
+### 场景化评分表
+
+| 主维度 | 二级指标 | 维度说明 | 评估项 | 评分逻辑 | 权重/满分 | 当前得分 |
 |---|---|---|---|---|---|---|
-| 端到端 | 任务完成度 | 最终结果是否满足用户目标 | ... | ... | ... | 待实测 |
-| 过程能力 | 决策路径 | 中间步骤是否可解释、可追踪、可恢复 | ... | ... | ... | 待实测 |
-| 综合评测 | 安全/成本/留存综合 | 全流程是否兼顾质量、风险和商业可持续性 | ... | ... | ... | 待实测 |
+| 端到端 | 端到端结果层 | 最终结果是否满足用户目标，能否独立完成目标场景。 | ... | ... | ... | 待实测 |
+| 过程能力 | 用户层 | 用户路径、交互反馈、控制感、信任建立和摩擦点是否支撑任务完成。 | ... | ... | ... | 待实测 |
+| 过程能力 | 模型数据层 | 模型、上下文、RAG/记忆/数据 grounding 是否支撑稳定过程。 | ... | ... | ... | 待实测 |
+| 过程能力 | 技术层 | Workflow/Agent/Tools/状态管理/异常恢复是否可靠。 | ... | ... | ... | 待实测 |
+| 综合评测 | 全流程综合 | 输出、过程、模型数据、技术、安全、成本、留存和商业价值是否整体成立。 | ... | ... | ... | 待实测 |
 ```
 
 ## Market Layer Competitor Guidance
