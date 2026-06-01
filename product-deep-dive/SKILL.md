@@ -40,6 +40,16 @@ Before drafting the document, gather current product information when a product 
 
 Use searched or fetched information to make each section's questions sharper. The questions should respond to the actual product, not only the generic template.
 
+## Reference Modules
+
+Use the local reference files only when their detail is needed. Do not bulk-load every reference file for lightweight drafts.
+
+- `references/chapter-contracts.md`: use when improving the 13-section structure, checking chapter depth, or deciding what each chapter must contain.
+- `references/evaluation-rubrics.md`: use when writing section 2 `测试评估体系`, especially when constructing second-level indicators, dimension explanations, weights, and scoring logic.
+- `references/product-type-playbooks.md`: use when adapting the teardown to a specific AI product type such as AI 陪伴, AI Agent, AI 视频/图片生成, AI 搜索/研究, or AI 编程/DevTool.
+
+When a reference module conflicts with this `SKILL.md`, the `SKILL.md` trigger discipline, Feishu delivery rules, evidence rules, and final self-check remain authoritative. Treat references as depth modules, not new triggers.
+
 ## Feishu Document Delivery
 
 Prefer real Feishu document delivery over chat-only output when possible.
@@ -779,6 +789,13 @@ Verification after writing:
 - Confirm nodes exist. A final six-layer architecture should usually have a substantial node count; a mini layer diagram should have enough shapes/text nodes to be editable rather than a single embedded image.
 - Confirm the source contains no connectors/arrows unless the user explicitly asks for a flow diagram.
 - If the whiteboard CLI check reports text overflow, overlap, or blank rendering, adjust SVG dimensions, text size, or module spacing and reconvert before updating Feishu.
+
+Before writing to Feishu, check reference-module application:
+
+- If producing a full 13-section teardown, use `references/chapter-contracts.md` as the depth standard for chapter completeness.
+- If writing section 2 `测试评估体系`, use `references/evaluation-rubrics.md` to verify the three main dimensions, scenario-specific second-level indicators, dimension explanations, and scoring logic.
+- If the product clearly matches AI 陪伴, AI Agent, AI 视频/图片生成, AI 搜索/研究, or AI 编程/DevTool, use `references/product-type-playbooks.md` to adapt questions and evaluation emphasis.
+- Do not mention reference file names in the final Feishu document unless the user asks how the skill was constructed.
 
 Before writing to Feishu, check the architecture diagrams:
 

@@ -403,9 +403,13 @@ Product-deep-dive/
   product-deep-dive/
     README.md        # Skill-level guide
     SKILL.md         # Codex / Claude-compatible skill instructions
+    references/      # Modular depth references for v2 framework growth
+      chapter-contracts.md
+      evaluation-rubrics.md
+      product-type-playbooks.md
     evals/
       evals.json     # Skill evaluation cases
-```
+  ```
 
 ---
 
@@ -827,6 +831,7 @@ Product-deep-dive/
 - `CONTRIBUTING.md`
 - 示例飞书文档截图或公开 demo 链接
 - 更多 eval cases
+- 更多 `references/` 模块，例如 technical inference、Feishu formatting、whiteboard architecture
 
 ---
 
