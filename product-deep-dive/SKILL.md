@@ -52,6 +52,13 @@ Use the local reference files only when their detail is needed. Do not bulk-load
 
 When a reference module conflicts with this `SKILL.md`, the `SKILL.md` trigger discipline, Feishu delivery rules, evidence rules, and final self-check remain authoritative. Treat references as depth modules, not new triggers.
 
+For a full 13-section teardown, the reference modules are not optional decoration. Apply them as quality gates:
+
+- Use `chapter-contracts.md` to check whether each chapter has the required depth, not just the required heading.
+- Use `evaluation-rubrics.md` whenever section 2 includes a scoring table.
+- Use `technical-inference.md` whenever section 9, 10, 11, or any architecture paragraph makes technical/model claims.
+- Use `output-quality-examples.md` before final delivery to reject generic L1/L2 writing and raise key chapters to senior AIPM quality.
+
 ## Feishu Document Delivery
 
 Prefer real Feishu document delivery over chat-only output when possible.
@@ -149,6 +156,8 @@ If the user provides a product URL, include it in `官网地址` before the 13 s
 
 Every numbered section must contain 3-8 product-specific high-value questions. Use searched/fetched product information, screenshots, official materials, or user-provided notes to decide the right number and angle. Dynamically rewrite the question bank for the concrete product; do not paste generic questions unchanged. Use 3 questions for lightweight framework drafts, and 5-8 questions when enough current information is available or the section is strategically important.
 
+High-value questions must force product judgment, not only collect information. Prefer questions that expose positioning assumptions, user/non-user boundaries, workflow trade-offs, cost and retention logic, evidence gaps, technical confidence, model commoditization risk, and what would be hard for competitors to copy.
+
 Use this section pattern:
 
 ```markdown
@@ -168,6 +177,13 @@ Use this section pattern:
 ...
 </callout>
 ```
+
+The `产品经理启发` callout should usually include:
+
+- `可迁移原则`: the reusable product principle.
+- `适用条件`: when this principle works.
+- `不适用条件/风险`: when it may mislead or create risk.
+- `可迁移场景`: adjacent AI product scenarios where the lesson applies.
 
 When the section needs screenshots but none are provided, include screenshot placeholders and explain what should be captured:
 
@@ -302,7 +318,7 @@ For AI, Agent, or AIGC products, go beyond surface features:
 - Infer agents by role only when the product behavior suggests stable task specialization.
 - For each inferred agent, describe input, processing, tools, output, and Badcases.
 - Provide prompt-like reconstructions only as "可能的提示词结构", not as confirmed internal prompts.
-- Use `references/technical-inference.md` for confidence labels, evidence boundaries, validation paths, and badcase analysis. Every non-trivial technical inference should include what was observed, what is inferred, why, confidence, how to verify, and likely Badcases.
+- Use `references/technical-inference.md` for confidence labels, evidence boundaries, validation paths, product-value impact, model commoditization risk, and badcase analysis. Every non-trivial technical inference should include what was observed, what is inferred, why, how it affects user experience/cost/reliability/retention/business, confidence, how to verify, and likely Badcases.
 
 Example format:
 
@@ -801,6 +817,19 @@ Before writing to Feishu, check reference-module application:
 - If writing section 9, 10, 11, or any technical reverse-engineering content, use `references/technical-inference.md` to keep Workflow/Agent/Multi-Agent/RAG/model-routing claims confidence-labeled and evidence-bounded.
 - If the output includes key chapters such as positioning, evaluation, market, business, technical, model, or product-manager insight, use `references/output-quality-examples.md` as the senior AIPM quality bar and avoid generic L1/L2 template filling.
 - Do not mention reference file names in the final Feishu document unless the user asks how the skill was constructed.
+
+Before writing to Feishu, run the depth quality gate:
+
+- Section 1 `产品定位与体验总结`: includes one-sentence positioning, core users, scenarios, anti-positioning, non-core users, substitutes, and assumptions that must remain true.
+- Section 2 `测试评估体系`: uses `端到端`, `过程能力`, and `综合评测` as fixed main dimensions; every dimension explains `评什么`, `为什么重要`, and `怎么评`.
+- Section 4 `差异化定位`: distinguishes `表层差异`, `结构差异`, and `战略差异`; explains what breaks industry convention, why it may work, and what remains hard to copy.
+- Section 6 `市场层拆解`: includes at least 3 competitors, the required competitor table fields, and a competitive landscape diagram with product-relevant axes.
+- Section 7 `商业层拆解`: covers growth loop, retention mechanism, payment trigger, unit economics hypothesis, cost drivers, margin pressure, supply-demand logic, and moat evidence strength.
+- Section 9 `技术层拆解`: every major Workflow/Agent/RAG/tool/plugin/prompt inference has evidence, confidence, validation path, Badcase, and product-value impact.
+- Section 10 `模型层拆解`: separates borrowed model capability from product-owned value; includes model commoditization risk, latency/cost/quality constraints, routing necessity, and how model capability does or does not become moat.
+- Section 12 `基础层拆解`: explains accumulated data/assets/context, whether accumulation improves the next experience, whether users have reason to keep feeding data, and whether this creates switching cost or a real data flywheel.
+- Every `产品经理启发` callout is specific to the analyzed product and includes transferable principle, applicable conditions, non-applicable conditions/risks, and transfer scenarios.
+- If any item lacks evidence, keep the analysis useful but mark it as `待验证` and add it to `信息缺口清单`.
 
 Before writing to Feishu, check the architecture diagrams:
 
