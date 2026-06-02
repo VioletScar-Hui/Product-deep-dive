@@ -74,7 +74,12 @@
     {
       "id": 15,
       "prompt": "我要拆解一个 AI 产品并输出飞书文档，最终架构图和各层小图都必须是可编辑飞书画板，不要静态 SVG 或图片。",
-      "expected_output": "Use the product-deep-dive workflow and create/update a Feishu document. Build the final six-layer architecture diagram and all mini layer diagrams as editable Feishu whiteboards using native/DSL-generated whiteboard nodes, not static PNG/SVG images. Do not use SVG <text>/<tspan> conversion as the source of labels. All labels must be represented as editable text carriers such as text_shape nodes or non-empty shape text fields. After writing, query every architecture whiteboard with lark-cli whiteboard +query --output_as raw and verify the boards contain editable text, have no zero-size image nodes, use no connectors/arrows, and keep the required layer order 市场层, 商业层, 用户层, 应用层, 模型层, 基础层. Export at least the final board and one mini board as preview images and visually inspect readable labels, colors, and layout before final confirmation."
+      "expected_output": "Use the product-deep-dive workflow and create/update a Feishu document. Build the final six-layer architecture diagram and all mini layer diagrams as editable Feishu whiteboards using native/DSL-generated whiteboard nodes, not static PNG/SVG images. Do not use SVG <text>/<tspan> conversion as the source of labels. All visible labels must be represented by explicit editable text nodes, and rectangle shape text must not be the only text strategy. After writing, query every architecture whiteboard with lark-cli whiteboard +query --output_as raw and verify the boards contain searchable required labels, have text_shape/text nodes, have no zero-size image nodes, use no connectors/arrows, and keep the required layer order 市场层, 商业层, 用户层, 应用层, 模型层, 基础层. Export preview images and visually inspect readable labels, colors, and layout before final confirmation."
+    },
+    {
+      "id": 16,
+      "prompt": "我发现飞书画板里只有彩色模块框，但是文字没有显示。你用 product-deep-dive 修复并重新生成这些画板。",
+      "expected_output": "Treat this as a blocking whiteboard-rendering failure, not as a cosmetic issue. Query the affected whiteboards as raw nodes, identify whether labels were lost because SVG text or shape-only text did not render, then regenerate each affected board with explicit native text nodes for every visible label. Use a label inventory before writing and verify after writing that required labels are searchable in raw output, text node counts roughly match the expected label count, zero-size image count is 0, and exported preview images show readable text. Do not confirm completion until the final board, mini layer boards, and competition/landscape board previews visibly display text."
     }
   ]
 }

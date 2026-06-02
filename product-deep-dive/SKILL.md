@@ -777,7 +777,7 @@ Preferred build path:
 
 1. Draft the diagram structure from the six-layer model: 市场层, 商业层, 用户层, 应用层, 模型层, 基础层.
 2. Build a whiteboard DSL or raw OpenAPI node structure directly. Use colored layer background shapes, white second-level group boxes, rounded child module rectangles, readable labels, balanced spacing, and no connectors.
-3. Put all visible text into editable whiteboard text carriers: `text_shape` nodes or non-empty shape `text` fields. Do not rely on SVG `<text>` or `<tspan>` conversion for module labels.
+3. Put every visible label into an explicit editable text node. The default source DSL should use separate `type: "text"` nodes for layer names, group titles, module labels, axis labels, legends, and competitor names. Do not rely on SVG `<text>`/`<tspan>` conversion or shape-only text properties for visible labels.
 4. Convert the DSL to Feishu whiteboard OpenAPI raw nodes when using `@larksuite/whiteboard-cli`, or produce raw nodes directly from a local generator:
    `npx -y @larksuite/whiteboard-cli@^0.2.11 -i <diagram.dsl.json> -f dsl -t openapi -o <diagram.openapi.json>`
 5. Run the whiteboard CLI check before writing when a CLI-supported source format is used:
@@ -788,8 +788,65 @@ Preferred build path:
 Strict text/editability rule:
 
 - Do not use SVG `<text>`/`<tspan>` as the source of labels for editable Feishu architecture boards. In practice, SVG text can be converted into invisible or zero-size image fragments instead of editable text.
-- SVG may be used only for non-text geometry or as a temporary visual sketch. Before Feishu delivery, redraw labels as native whiteboard text nodes or shape text.
-- A whiteboard token alone is not proof of success. The raw whiteboard node structure must contain editable text carriers and must not hide labels inside zero-size image nodes.
+- SVG may be used only for non-text geometry or as a temporary visual sketch. Before Feishu delivery, redraw every label as a native whiteboard text node.
+- Shape `text` fields are not enough as the sole text strategy. They may be duplicated for convenience, but each visible label must also be represented by an explicit text node or by the converter output's `text_shape` node that is proven visible in preview.
+- A whiteboard token alone is not proof of success. The raw whiteboard node structure must contain visible editable text nodes and must not hide labels inside zero-size image nodes.
+
+Canonical source DSL pattern:
+
+```json
+{
+  "version": 2,
+  "nodes": [
+    {
+      "type": "frame",
+      "id": "root",
+      "x": 0,
+      "y": 0,
+      "width": 1200,
+      "height": 900,
+      "layout": "none",
+      "fillColor": "#FFFFFF",
+      "borderColor": "#D8DEE9",
+      "children": [
+        {
+          "type": "rect",
+          "id": "layer-bg-market",
+          "x": 28,
+          "y": 28,
+          "width": 1144,
+          "height": 130,
+          "fillColor": "#E2F6EA",
+          "borderColor": "#2F9E64",
+          "borderWidth": 2,
+          "borderRadius": 14
+        },
+        {
+          "type": "text",
+          "id": "label-market",
+          "x": 40,
+          "y": 78,
+          "width": 96,
+          "height": "fit-content",
+          "text": "市场层",
+          "fontSize": 24,
+          "textColor": "#111827",
+          "textAlign": "center",
+          "verticalAlign": "middle"
+        }
+      ]
+    }
+  ]
+}
+```
+
+When drawing module boxes, create the box as a geometry node and the label as a sibling text node placed inside the box. Do not depend on the rectangle's `text` field unless the exported preview has already proved that field renders as editable visible text.
+
+Minimum label-accounting rule:
+
+- Before conversion, list all expected labels: layer names, group names, child module names, axis labels, legends, and product/competitor names.
+- After raw query, count visible text carriers and compare them with the expected label list. Missing labels are a blocking error.
+- For the final six-layer architecture, the expected label count should usually be at least: 6 layer labels + 12 group titles + 40+ module labels. Mini diagrams should usually have 1 layer label + 2 group titles + 8+ module labels.
 
 When the target document already contains a whiteboard block, reuse its `block_token` as the whiteboard token and overwrite that whiteboard's nodes.
 
@@ -812,7 +869,7 @@ Known failure pattern and fix:
 
 - Symptom: the Feishu document contains `<whiteboard token=...>` blocks, but the board looks blank, labels are missing, or raw query shows many `image` nodes with width/height `0`.
 - Cause: SVG text was converted as image fragments rather than editable whiteboard text.
-- Fix: discard the SVG-text conversion output and regenerate the board as native whiteboard shapes plus `text_shape`/shape text nodes. Then overwrite the affected whiteboard tokens and re-query them.
+- Fix: discard the SVG-text conversion output and regenerate the board as native whiteboard geometry plus explicit text nodes. Then overwrite the affected whiteboard tokens and re-query them.
 
 Verification after writing:
 
@@ -820,9 +877,12 @@ Verification after writing:
 - Query every created or updated architecture whiteboard with `lark-cli whiteboard +query --whiteboard-token <token> --output_as raw --format json`.
 - Confirm nodes exist. A final six-layer architecture should usually have a substantial node count, often 100+ nodes when all six layers and labels are editable; a mini layer diagram should usually have 20+ nodes.
 - Confirm `Images=0` for architecture boards, or at minimum `ZeroImages=0` when non-text decorative images are explicitly used.
-- Confirm `TextShapes > 0` or `NonEmptyShapeText > 0`; the labels must be represented as editable text, not flattened into images.
+- Confirm `TextShapes > 0`; do not pass a board only because `NonEmptyShapeText > 0`. Shape text can be unreliable unless the preview proves it is visible.
+- Confirm text count roughly matches the expected label list. A board with only a few text nodes is not acceptable when dozens of labels were expected.
+- Confirm at least three required labels from each board can be found in the raw query output. For example, the final architecture should include `市场层`, `应用层`, and `基础层`; a market mini board should include `市场层` plus its two group titles.
 - Confirm the source contains no connectors/arrows unless the user explicitly asks for a flow diagram.
-- Export at least the final board and one mini board as preview images with `lark-cli whiteboard +query --whiteboard-token <token> --output_as image --output <file> --overwrite --format json`, then visually inspect that labels, colors, and layer order render correctly.
+- Export every architecture board as a preview image with `lark-cli whiteboard +query --whiteboard-token <token> --output_as image --output <file> --overwrite --format json`, then visually inspect that labels, colors, and layer order render correctly. If there are many boards, at minimum inspect the final board plus each board type: one mini layer board and one competition/landscape board.
+- If any preview image shows colored boxes but missing text, do not deliver. Regenerate with explicit text nodes and overwrite the affected whiteboard.
 - If the whiteboard CLI check or preview shows text overflow, overlap, blank rendering, or missing labels, adjust node dimensions, text size, or module spacing and rewrite Feishu before final delivery.
 
 Before writing to Feishu, check reference-module application:
@@ -860,7 +920,7 @@ Before writing to Feishu, check the architecture diagrams:
 - The six layer sections and their mini diagrams appear in the document's normal vertical reading order, not in a horizontal grid.
 - Every architecture diagram has no arrows or connector lines.
 - Mini diagrams and final diagram use consistent naming and colors.
-- Every written architecture whiteboard passes raw-node verification: no zero-size text images, editable text carriers exist, and preview images render readable labels.
+- Every written architecture whiteboard passes raw-node verification: no zero-size text images, explicit editable text nodes exist, required labels are searchable in raw output, and preview images render readable labels.
 
 Before writing to Feishu, check the tables:
 
@@ -914,7 +974,9 @@ Include only useful missing inputs:
 - Do not skip the whiteboard OAuth recovery path when `board:whiteboard:node:create` or `board:whiteboard:node:read` scopes are missing.
 - Do not rely on Mermaid auto-layout for the final architecture when the user requested strict layer layout; use coordinate-based native whiteboard/DSL nodes.
 - Do not use SVG `<text>`/`<tspan>` conversion for editable architecture labels. It can create zero-size image nodes and blank boards.
+- Do not depend on rectangle `text` fields as the only text source. Use sibling explicit text nodes for visible labels, then verify the converted/output board contains visible text.
 - Do not treat the existence of a `<whiteboard token=...>` block as final validation. Query raw nodes and export previews before saying the document is done.
+- Do not deliver a whiteboard whose preview shows boxes without text, even if the raw query has shape nodes.
 - Do not color only the small modules; each layer background should also have its own color.
 - Do not omit the layer names; every layer label on the far left must visibly be 市场层, 商业层, 用户层, 应用层, 模型层, or 基础层.
 - Do not use Mermaid links such as `-->`, `-.->`, or `~~~` in the architecture diagram.

@@ -320,7 +320,7 @@ The final architecture uses six layers:
 
 Each layer can also appear as a mini diagram under its corresponding chapter.
 
-In v2.0, editable architecture diagrams must be built as native Feishu whiteboard nodes or DSL-generated raw nodes. Labels should remain editable text (`text_shape` or shape text), not SVG text converted into images. After writing, the agent must query the raw whiteboard nodes and export previews before confirming delivery.
+In v2.0, editable architecture diagrams must be built as native Feishu whiteboard nodes or DSL-generated raw nodes. Labels should be explicit editable text nodes, not SVG text converted into images and not rectangle text fields used as the only text source. After writing, the agent must query the raw whiteboard nodes, confirm required labels are searchable, and export previews before confirming delivery.
 
 ### Feishu/Lark Polish
 
@@ -479,8 +479,8 @@ Check:
 
 - The document contains `<whiteboard token=...>` blocks, not image blocks.
 - Feishu whiteboard scopes are granted.
-- Labels are native editable whiteboard text, not SVG text flattened into images.
-- Raw-node queries show no zero-size image fragments, and exported previews render readable labels.
+- Labels are explicit native editable text nodes, not SVG text flattened into images or shape-only text.
+- Raw-node queries show searchable required labels, no zero-size image fragments, and exported previews render readable labels.
 
 ---
 
