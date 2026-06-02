@@ -72,9 +72,14 @@
 完整使用这个 Skill 前，需要先安装并登录 `lark-cli`。最低检查：
 
 ```powershell
-lark-cli --version
 lark-cli auth status
 lark-cli docs +create --api-version v2 --help
+```
+
+可选版本检查：
+
+```powershell
+lark-cli --version
 ```
 
 如果 `lark-cli auth status` 没有可用用户身份，请先完成用户授权；如果飞书命令返回缺少 scope，按命令提示授权对应 scope 后重试。
@@ -91,18 +96,44 @@ npx -y @larksuite/whiteboard-cli@^0.2.11 -v
 
 ## 安装
 
+### 最简单方式：让 AI Agent 按 URL 安装
+
+如果你正在使用 Codex 或 Claude Code，可以直接把下面这句话发给 Agent：
+
+```text
+帮我安装这个 skill：https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+英文也可以直接这样说：
+
+```text
+Install this skill: https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+通用格式：
+
+```text
+帮我安装这个 skill：https://github.com/<owner>/<repo>/tree/main/<skill-name>
+```
+
+Agent 应该先检查本地是否已有同名 Skill，再把仓库中的 skill 子目录安装到对应的 skills 目录中。本仓库需要复制的是 `product-deep-dive/` 子目录，不是仓库根目录。安装后重启 Codex 或 Claude Code。
+
 ### Codex
 
 ```powershell
 $repoPath = "$env:USERPROFILE\.codex\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
-if (Test-Path $repoPath) {
+New-Item -ItemType Directory -Force -Path (Split-Path $repoPath) | Out-Null
+if (Test-Path "$repoPath\.git") {
   Set-Location $repoPath
-  git pull
+  git pull --ff-only
+} elseif (Test-Path $repoPath) {
+  Write-Error "$repoPath already exists but is not a git repository. Move it aside or choose a different repoPath."
+  exit 1
 } else {
   git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $repoPath
 }
-New-Item -ItemType Directory -Force $skillPath | Out-Null
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -111,13 +142,17 @@ Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse
 ```powershell
 $repoPath = "$env:USERPROFILE\.claude\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
-if (Test-Path $repoPath) {
+New-Item -ItemType Directory -Force -Path (Split-Path $repoPath) | Out-Null
+if (Test-Path "$repoPath\.git") {
   Set-Location $repoPath
-  git pull
+  git pull --ff-only
+} elseif (Test-Path $repoPath) {
+  Write-Error "$repoPath already exists but is not a git repository. Move it aside or choose a different repoPath."
+  exit 1
 } else {
   git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $repoPath
 }
-New-Item -ItemType Directory -Force $skillPath | Out-Null
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -127,11 +162,29 @@ Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse
 
 ## 给 AI Agent 的快速安装检查
 
+用户可能会用这种方式要求安装：
+
+```text
+帮我安装这个 skill：https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+```text
+Install this skill: https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+也可能使用通用 GitHub skill 子目录格式：
+
+```text
+帮我安装这个 skill：https://github.com/<owner>/<repo>/tree/main/<skill-name>
+```
+
+Agent 应该解析 GitHub URL，确认要安装的是仓库中的 skill 子目录，而不是整个仓库根目录。对于本仓库，真正要复制到本地 skills 目录的是 `product-deep-dive/` 子目录。
+
 当用户要求安装这个 Skill 时，先检查飞书交付前置条件：
 
 ```powershell
-lark-cli --version
 lark-cli auth status
+lark-cli docs +create --api-version v2 --help
 ```
 
 然后安装或更新 Skill，并验证：
@@ -349,8 +402,13 @@ Product-deep-dive/
 ```powershell
 $repoPath = "$env:USERPROFILE\.codex\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
+if (-not (Test-Path "$repoPath\.git")) {
+  Write-Error "$repoPath is not an installed Product-deep-dive git repository. Run the install command first."
+  exit 1
+}
 Set-Location $repoPath
-git pull
+git pull --ff-only
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -359,8 +417,13 @@ Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse
 ```powershell
 $repoPath = "$env:USERPROFILE\.claude\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (-not (Test-Path "$repoPath\.git")) {
+  Write-Error "$repoPath is not an installed Product-deep-dive git repository. Run the install command first."
+  exit 1
+}
 Set-Location $repoPath
-git pull
+git pull --ff-only
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -387,7 +450,7 @@ Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse
 
 检查：
 
-- `lark-cli --version` 是否可用。
+- `lark-cli auth status` 是否可用。
 - `lark-cli docs +create --api-version v2 --help` 是否可用。
 - 是否已完成用户身份授权。
 - 当前身份是否为 `user`，而不是只能访问机器人资源的 `bot`。

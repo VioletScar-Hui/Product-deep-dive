@@ -68,9 +68,14 @@ This skill is built around Feishu/Lark document delivery. Install and configure 
 Minimum checks:
 
 ```powershell
-lark-cli --version
 lark-cli auth status
 lark-cli docs +create --api-version v2 --help
+```
+
+Optional version check:
+
+```powershell
+lark-cli --version
 ```
 
 If `lark-cli auth status` shows no usable user login, authenticate as a user before running product teardown workflows. When Feishu returns a missing-scope error, follow the scope hint from `lark-cli` and authorize that exact scope.
@@ -87,18 +92,44 @@ Without `lark-cli`, the skill can still draft a teardown framework in chat, but 
 
 ## Installation
 
+### Easiest Path: Ask An AI Agent To Install From URL
+
+If you are using Codex or Claude Code, you can send this directly to the agent:
+
+```text
+Install this skill: https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+Chinese prompt also works:
+
+```text
+帮我安装这个 skill：https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+Generic format:
+
+```text
+Install this skill: https://github.com/<owner>/<repo>/tree/main/<skill-name>
+```
+
+The agent should check whether a skill with the same name already exists, then install the repository's skill subdirectory into the local skills directory. For this repository, copy `product-deep-dive/`, not the repository root. Restart Codex or Claude Code after installation.
+
 ### Codex
 
 ```powershell
 $repoPath = "$env:USERPROFILE\.codex\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
-if (Test-Path $repoPath) {
+New-Item -ItemType Directory -Force -Path (Split-Path $repoPath) | Out-Null
+if (Test-Path "$repoPath\.git") {
   Set-Location $repoPath
-  git pull
+  git pull --ff-only
+} elseif (Test-Path $repoPath) {
+  Write-Error "$repoPath already exists but is not a git repository. Move it aside or choose a different repoPath."
+  exit 1
 } else {
   git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $repoPath
 }
-New-Item -ItemType Directory -Force $skillPath | Out-Null
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -107,13 +138,17 @@ Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse
 ```powershell
 $repoPath = "$env:USERPROFILE\.claude\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
-if (Test-Path $repoPath) {
+New-Item -ItemType Directory -Force -Path (Split-Path $repoPath) | Out-Null
+if (Test-Path "$repoPath\.git") {
   Set-Location $repoPath
-  git pull
+  git pull --ff-only
+} elseif (Test-Path $repoPath) {
+  Write-Error "$repoPath already exists but is not a git repository. Move it aside or choose a different repoPath."
+  exit 1
 } else {
   git clone https://github.com/VioletScar-Hui/Product-deep-dive.git $repoPath
 }
-New-Item -ItemType Directory -Force $skillPath | Out-Null
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -123,11 +158,29 @@ Restart Codex or Claude Code after installation so the skill index reloads.
 
 ## Quick Install For AI Agents
 
+Users may ask for installation with a prompt like:
+
+```text
+Install this skill: https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+```text
+帮我安装这个 skill：https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+```
+
+They may also use the generic GitHub skill-subdirectory format:
+
+```text
+Install this skill: https://github.com/<owner>/<repo>/tree/main/<skill-name>
+```
+
+The agent should parse the GitHub URL and confirm that the target is the skill subdirectory, not the repository root. For this repository, the directory to copy into the local skills directory is `product-deep-dive/`.
+
 If a user asks you to install this skill, first check the Feishu delivery prerequisite:
 
 ```powershell
-lark-cli --version
 lark-cli auth status
+lark-cli docs +create --api-version v2 --help
 ```
 
 Then install or update the skill and verify:
@@ -345,8 +398,13 @@ Product-deep-dive/
 ```powershell
 $repoPath = "$env:USERPROFILE\.codex\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.codex\skills\product-deep-dive"
+if (-not (Test-Path "$repoPath\.git")) {
+  Write-Error "$repoPath is not an installed Product-deep-dive git repository. Run the install command first."
+  exit 1
+}
 Set-Location $repoPath
-git pull
+git pull --ff-only
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -355,8 +413,13 @@ Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse
 ```powershell
 $repoPath = "$env:USERPROFILE\.claude\skill-repos\Product-deep-dive"
 $skillPath = "$env:USERPROFILE\.claude\skills\product-deep-dive"
+if (-not (Test-Path "$repoPath\.git")) {
+  Write-Error "$repoPath is not an installed Product-deep-dive git repository. Run the install command first."
+  exit 1
+}
 Set-Location $repoPath
-git pull
+git pull --ff-only
+New-Item -ItemType Directory -Force -Path $skillPath | Out-Null
 Copy-Item -Path "$repoPath\product-deep-dive\*" -Destination $skillPath -Recurse -Force
 ```
 
@@ -383,7 +446,7 @@ Help me deeply analyze XXX AI product and output a Feishu document.
 
 Check:
 
-- `lark-cli --version` works.
+- `lark-cli auth status` works.
 - `lark-cli docs +create --api-version v2 --help` works.
 - User authentication is complete.
 - The current identity is `user`, not `bot`.
