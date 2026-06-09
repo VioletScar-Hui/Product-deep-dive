@@ -105,13 +105,13 @@ npx -y @larksuite/whiteboard-cli@^0.2.11 -v
 如果你正在使用 Codex 或 Claude Code，可以直接把下面这句话发给 Agent：
 
 ```text
-帮我安装这个 skill：https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+帮我安装这个 skill：https://github.com/VioletScar-Hui/Product-deep-dive
 ```
 
 英文也可以直接这样说：
 
 ```text
-Install this skill: https://github.com/VioletScar-Hui/Product-deep-dive/tree/main/product-deep-dive
+Install this skill: https://github.com/VioletScar-Hui/Product-deep-dive
 ```
 
 通用格式：
